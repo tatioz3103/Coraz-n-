@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
+
+<title>Para ti ❤️</title>
+
+<style>
+
+• {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+html,
+body {
+width: 100%;
+height: 100%;
+overflow: hidden;
+
+background: #00030a;
+
+font-family:
+Arial,
+Helvetica,
+sans-serif;
+
+touch-action: none;
+}
+
+#scene {
+position: fixed;
+inset: 0;
+}
+
+/* =========================================
+FONDO
+========================================= */
+
+.background-glow {
+
+position: fixed;
+
+width: 800px;
+height: 800px;
+
+left: 50%;
+top: 50%;
+
+transform:
+translate(-50%, -50%);
+
+border-radius: 50%;
+
+background:
+radial-gradient(
+circle,
+rgba(37,99,235,.25),
+rgba(30,64,175,.12) 35%,
+transparent 70%
+);
+
+filter: blur(45px);
+
+pointer-events: none;
+
+animation:
+glowPulse 4s ease-in-out infinite;
+
+z-index: 0;
+}
+
+@keyframes glowPulse {
+
+0%,100% {
+transform:
+translate(-50%,-50%)
+scale(.85);
+
+opacity: .55;
+}
+
+50% {
+transform:
+translate(-50%,-50%)
+scale(1.15);
+
+opacity: 1;
+}
+}
+
+/* =========================================
+INSTRUCCIONES
+========================================= */
+
+.instructions {
+
+position: fixed;
+
+top: 20px;
+left: 50%;
+
+transform:
+translateX(-50%);
+
+z-index: 20;
+
+color:
+rgba(219,234,254,.85);
+
+font-size: 12px;
+
+text-align: center;
+
+padding:
+9px 16px;
+
+border:
+1px solid
+rgba(147,197,253,.2);
+
+border-radius: 30px;
+
+background:
+rgba(2,8,23,.45);
+
+backdrop-filter:
+blur(10px);
+
+box-shadow:
+0 0 20px
+rgba(59,130,246,.12);
+
+white-space: nowrap;
+}
+
+/* =========================================
+TEXTO CENTRAL
+========================================= */
+
+.center-text {
+
+position: fixed;
+
+left: 50%;
+top: 50%;
+
+transform:
+translate(-50%, 175px);
+
+z-index: 15;
+
+text-align: center;
+
+pointer-events: none;
+
+color: white;
+
+text-shadow:
+0 0 10px #60a5fa,
+0 0 25px #2563eb,
+0 0 45px #1d4ed8;
+
+}
+
+.center-text h1 {
+
+font-size: 27px;
+
+letter-spacing: 5px;
+
+}
+
+.center-text p {
+
+margin-top: 8px;
+
+font-size: 14px;
+
+opacity: .8;
+
+}
+
+/* =========================================
+BOTÓN
+========================================= */
+
+#startButton {
+
+position: fixed;
+
+bottom: 28px;
+left: 50%;
+
+transform:
+translateX(-50%);
+
+z-index: 30;
+
+padding:
+13px 27px;
+
+border:
+1px solid
+rgba(147,197,253,.45);
+
+border-radius: 30px;
+
+background:
+rgba(15,23,42,.7);
+
+color: white;
+
+font-size: 14px;
+
+cursor: pointer;
+
+backdrop-filter:
+blur(12px);
+
+box-shadow:
+0 0 20px
+rgba(59,130,246,.3);
+
+transition:
+.3s ease;
+
+}
+
+#startButton:hover {
+
+transform:
+translateX(-50%)
+scale(1.07);
+
+background:
+rgba(37,99,235,.4);
+
+box-shadow:
+0 0 35px
+rgba(59,130,246,.7);
+
+}
+
+/* =========================================
+MÓVIL
+========================================= */
+
+@media(max-width:600px) {
+
+.instructions {
+
+top: 13px;
+
+font-size: 9px;
+
+padding:
+7px 11px;
+
+}
+
+.center-text {
+
+transform:
+translate(-50%, 150px);
+
+}
+
+.center-text h1 {
+
+font-size: 20px;
+
+letter-spacing: 3px;
+
+}
+
+.center-text p {
+
+font-size: 12px;
+
+}
+
+#startButton {
+
+bottom: 20px;
+
+font-size: 13px;
+
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="scene"></div>
+
+<div class="background-glow"></div>
+
+<div class="instructions">
+🖱️ Arrastra para girar • 📱 Desliza para explorar • 🔍 Pellizca para acercar
+</div>
+
+<div class="center-text">
+
+<h1>TE QUIERO ❤️</h1>
+
+<p>Siempre tú</p>
+
+</div>
+
+<button id="startButton">
+✨ Ver sorpresa
+</button>
+
+<!-- THREE.JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+<script>
+
+/* =====================================================
+ESCENA
+===================================================== */
+
+const scene =
+new THREE.Scene();
+
+/* =====================================================
+CÁMARA
+===================================================== */
+
+const camera =
+new THREE.PerspectiveCamera(
+60,
+window.innerWidth /
+window.innerHeight,
+0.1,
+2000
+);
+
+camera.position.z = 34;
+
+/* =====================================================
+RENDERER
+===================================================== */
+
+const renderer =
+new THREE.WebGLRenderer({
+
+antialias: true,
+
+alpha: true
+
+});
+
+renderer.setPixelRatio(
+Math.min(
+window.devicePixelRatio,
+2
+)
+);
+
+renderer.setSize(
+window.innerWidth,
+window.innerHeight
+);
+
+renderer.outputColorSpace =
+THREE.SRGBColorSpace;
+
+document
+.getElementById("scene")
+.appendChild(
+renderer.domElement
+);
+
+/* =====================================================
+GRUPO PRINCIPAL 3D
+===================================================== */
+
+const world =
+new THREE.Group();
+
+scene.add(world);
+
+/* =====================================================
+CORAZÓN
+===================================================== */
+
+const heartGroup =
+new THREE.Group();
+
+world.add(
+heartGroup
+);
+
+/* =====================================================
+CORAZÓN FORMADO POR 20.000 PARTÍCULAS
+===================================================== */
+
+const PARTICLE_COUNT =
+20000;
+
+const positions =
+new Float32Array(
+PARTICLE_COUNT * 3
+);
+
+const colors =
+new Float32Array(
+PARTICLE_COUNT * 3
+);
+
+const originalPositions =
+new Float32Array(
+PARTICLE_COUNT * 3
+);
+
+for (
+let i = 0;
+i < PARTICLE_COUNT;
+i++
+) {
+
+const i3 =
+i * 3;
+
+const t =
+Math.random() *
+Math.PI * 2;
+
+/*
+Distribución interna
+*/
+
+const radius =
+Math.pow(
+Math.random(),
+.52
+);
+
+/*
+Fórmula del corazón
+*/
+
+let x =
+16 *
+Math.pow(
+Math.sin(t),
+3
+);
+
+let y =
+13 *
+Math.cos(t)
+-
+5 *
+Math.cos(2t)
+-
+2 *
+Math.cos(3t)
+-
+Math.cos(4*t);
+
+/*
+Escala
+*/
+
+x *=
+radius *
+.72;
+
+y *=
+radius *
+.72;
+
+/*
+PROFUNDIDAD REAL
+*/
+
+let z =
+(
+Math.random() -
+.5
+) *
+8 *
+radius;
+
+/*
+Pequeña irregularidad
+*/
+
+x +=
+(
+Math.random() -
+.5
+) *
+.25;
+
+y +=
+(
+Math.random() -
+.5
+) *
+.25;
+
+positions[i3] =
+x;
+
+positions[i3 + 1] =
+y;
+
+positions[i3 + 2] =
+z;
+
+originalPositions[i3] =
+x;
+
+originalPositions[i3 + 1] =
+y;
+
+originalPositions[i3 + 2] =
+z;
+
+/*
+Colores azules
+*/
+
+const color =
+new THREE.Color();
+
+const random =
+Math.random();
+
+if (random < .18) {
+
+color.set(
+"#dbeafe"
+);
+
+}
+
+else if (random < .38) {
+
+color.set(
+"#93c5fd"
+);
+
+}
+
+else if (random < .65) {
+
+color.set(
+"#60a5fa"
+);
+
+}
+
+else if (random < .88) {
+
+color.set(
+"#3b82f6"
+);
+
+}
+
+else {
+
+color.set(
+"#2563eb"
+);
+
+}
+
+colors[i3] =
+color.r;
+
+colors[i3 + 1] =
+color.g;
+
+colors[i3 + 2] =
+color.b;
+
+}
+
+/* =====================================================
+GEOMETRÍA DEL CORAZÓN
+===================================================== */
+
+const heartGeometry =
+new THREE.BufferGeometry();
+
+heartGeometry.setAttribute(
+
+"position",
+
+new THREE.BufferAttribute(
+positions,
+3
+)
+
+);
+
+heartGeometry.setAttribute(
+
+"color",
+
+new THREE.BufferAttribute(
+colors,
+3
+)
+
+);
+
+/* =====================================================
+MATERIAL
+===================================================== */
+
+const heartMaterial =
+new THREE.PointsMaterial({
+
+size:
+.085,
+
+vertexColors:
+true,
+
+transparent:
+true,
+
+opacity:
+.95,
+
+blending:
+THREE.AdditiveBlending,
+
+depthWrite:
+false
+
+});
+
+/* =====================================================
+CORAZÓN
+===================================================== */
+
+const heart =
+new THREE.Points(
+heartGeometry,
+heartMaterial
+);
+
+heartGroup.add(
+heart
+);
+
+/* =====================================================
+BRILLO EXTERIOR DEL CORAZÓN
+===================================================== */
+
+const glowParticles =
+new THREE.Group();
+
+heartGroup.add(
+glowParticles
+);
+
+for (
+let i = 0;
+i < 900;
+i++
+) {
+
+const material =
+new THREE.SpriteMaterial({
+
+color:
+0x60a5fa,
+
+transparent:
+true,
+
+opacity:
+Math.random() *
+.25 +
+.05,
+
+blending:
+THREE.AdditiveBlending,
+
+depthWrite:
+false
+
+});
+
+const sprite =
+new THREE.Sprite(
+material
+);
+
+const t =
+Math.random() *
+Math.PI *
+2;
+
+const radius =
+1 +
+Math.random() *
+.4;
+
+sprite.position.set(
+
+16 *
+Math.pow(
+Math.sin(t),
+3
+) *
+radius *
+.72,
+
+(
+13 *
+Math.cos(t)
+-
+5 *
+Math.cos(2t)
+-
+2 *
+Math.cos(3t)
+-
+Math.cos(4*t)
+) *
+radius *
+.72,
+
+(
+Math.random() -
+.5
+) * 7
+
+);
+
+const size =
+Math.random() *
+.12 +
+.04;
+
+sprite.scale.set(
+size,
+size,
+size
+);
+
+glowParticles.add(
+sprite
+);
+
+}
+
+/* =====================================================
+PARTÍCULAS AMBIENTALES 3D
+===================================================== */
+
+const ambientGeometry =
+new THREE.BufferGeometry();
+
+const ambientPositions =
+new Float32Array(
+3500 * 3
+);
+
+for (
+let i = 0;
+i < 3500;
+i++
+) {
+
+const i3 =
+i * 3;
+
+ambientPositions[i3] =
+(
+Math.random() -
+.5
+) * 70;
+
+ambientPositions[i3 + 1] =
+(
+Math.random() -
+.5
+) * 55;
+
+ambientPositions[i3 + 2] =
+(
+Math.random() -
+.5
+) * 55;
+
+}
+
+ambientGeometry.setAttribute(
+
+"position",
+
+new THREE.BufferAttribute(
+ambientPositions,
+3
+)
+
+);
+
+const ambientMaterial =
+new THREE.PointsMaterial({
+
+color:
+0x60a5fa,
+
+size:
+.045,
+
+transparent:
+true,
+
+opacity:
+.45,
+
+blending:
+THREE.AdditiveBlending,
+
+depthWrite:
+false
+
+});
+
+const ambientParticles =
+new THREE.Points(
+ambientGeometry,
+ambientMaterial
+);
+
+world.add(
+ambientParticles
+);
+
+/* =====================================================
+FRASES
+TODAS ESTÁN EN 3D
+===================================================== */
+
+const phrases = [
+
+"Te quiero más de lo que puedo explicar con palabras. ❤️",
+
+"Gracias por llegar a mi vida y hacerla más bonita.",
+
+"Me encanta saber que te tengo a mi lado.",
+
+"Eres una de las personas más importantes de mi vida.",
+
+"Contigo puedo ser completamente yo misma.",
+
+"Me haces sonreír incluso en los días difíciles.",
+
+"Me encanta compartir mis días contigo.",
+
+"Tu felicidad también se ha convertido en algo importante para mí.",
+
+"Gracias por estar cuando más te necesito.",
+
+"Me siento muy afortunada de tenerte.",
+
+"Me encanta tu forma de ser.",
+
+"Siempre consigues alegrarme el día.",
+
+"Eres mi persona favorita para contarle cualquier cosa.",
+
+"Me encanta hablar contigo hasta de las cosas más pequeñas.",
+
+"Contigo los momentos simples se vuelven especiales.",
+
+"Me gusta muchísimo la tranquilidad que siento cuando estoy contigo.",
+
+"Espero poder seguir creando recuerdos contigo.",
+
+"Eres alguien que quiero conservar siempre en mi vida.",
+
+"Gracias por cada detalle, por pequeño que sea.",
+
+"Me haces sentir querida y valorada.",
+
+"No necesito un día perfecto si puedo compartirlo contigo.",
+
+"Me encanta cuando me haces reír sin siquiera intentarlo.",
+
+"Eres mi lugar favorito cuando necesito sentirme bien.",
+
+"Me encanta la confianza que tenemos.",
+
+"Cada momento contigo tiene algo especial.",
+
+"Me gusta muchísimo escucharte hablar de las cosas que te apasionan.",
+
+"Admiro muchas cosas de ti.",
+
+"Gracias por tenerme paciencia y comprenderme.",
+
+"Me encanta saber que puedo contar contigo.",
+
+"Tu presencia hace que mis días sean mejores.",
+
+"Me haces sentir muy especial.",
+
+"Qué bonito fue coincidir contigo.",
+
+"Me alegra muchísimo haberte conocido.",
+
+"Gracias por formar parte de mi historia.",
+
+"Me encanta que seas tú la persona con quien comparto tantos momentos.",
+
+"Contigo puedo reírme de cualquier tontería. 😂❤️",
+
+"Gracias por cada sonrisa que me has regalado.",
+
+"Gracias por creer en mí.",
+
+"Gracias por apoyarme en mis sueños.",
+
+"Quiero verte cumplir también todos tus sueños.",
+
+"Siempre voy a desear que te vaya bien.",
+
+"Me encanta verte feliz.",
+
+"Tu sonrisa es una de mis cosas favoritas.",
+
+"Contigo aprendí que los pequeños detalles pueden significar muchísimo.",
+
+"Me encanta tener recuerdos que solamente tú y yo entendemos.",
+
+"Qué bonito es tener a alguien con quien compartir tanto.",
+
+"Me haces sentir que no estoy sola.",
+
+"Gracias por cada momento que has compartido conmigo.",
+
+"Eres alguien que ocupa un lugar muy especial en mi corazón.",
+
+"Me encanta la conexión que tenemos.",
+
+"A veces te extraño incluso cuando acabamos de hablar. 🥹❤️",
+
+"Siempre encuentro una razón para pensar en ti.",
+
+"Hay canciones que inevitablemente me hacen acordar de ti.",
+
+"Me encanta cuando apareces inesperadamente para alegrarme el día.",
+
+"Me gusta imaginar todos los recuerdos que todavía nos faltan por crear.",
+
+"Quiero seguir conociendo cada parte de ti.",
+
+"Me encanta descubrir cosas nuevas sobre ti.",
+
+"Nunca me cansaría de escuchar tus historias.",
+
+"Gracias por dejarme formar parte de tu vida.",
+
+"Espero que podamos seguir creciendo juntos.",
+
+"Quiero que siempre podamos hablar con sinceridad.",
+
+"Lo que más valoro es poder confiar en ti.",
+
+"Me gusta saber que podemos apoyarnos mutuamente.",
+
+"No eres perfecto, pero eres muy especial para mí.",
+
+"Me encanta quererte tal como eres.",
+
+"Quiero estar para ti tanto en los días buenos como en los difíciles.",
+
+"Siempre voy a alegrarme por tus logros.",
+
+"Quiero ser una persona que te haga sentir orgulloso de tenerme en tu vida.",
+
+"Me encanta cuando hacemos planes juntos.",
+
+"Espero que muchos de nuestros planes se conviertan en recuerdos.",
+
+"Gracias por cada palabra bonita que me has dicho.",
+
+"Me haces sentir muy querida.",
+
+"Me encanta poder llamarte mi novio. ❤️",
+
+"Qué suerte la mía haber encontrado a alguien como tú.",
+
+"Eres una parte muy bonita de mi vida.",
+
+"Me encanta pensar en ti antes de dormir.",
+
+"También eres de las primeras personas en las que pienso al despertar.",
+
+"Tu compañía es suficiente para hacer especial cualquier momento.",
+
+"Espero que nunca dejemos de reírnos juntos.",
+
+"Quiero seguir aprendiendo, creciendo y compartiendo contigo.",
+
+"Gracias por ser parte de tantos momentos importantes para mí.",
+
+"Me encanta poder decir que eres alguien especial para mí.",
+
+"Si alguna vez dudas de lo mucho que me importas, recuerda todas las veces que he elegido compartir mi vida contigo.",
+
+"No sé qué nos deparará el futuro, pero me alegra vivir el presente contigo.",
+
+"Te quiero muchísimo y espero que nunca lo olvides.",
+
+"Simplemente, gracias por ser tú y por dejarme quererte. ❤️"
+
+];
+
+/* =====================================================
+CREAR TEXTURA DE CADA FRASE
+===================================================== */
+
+function createTextTexture(text) {
+
+const canvas =
+document.createElement(
+"canvas"
+);
+
+const ctx =
+canvas.getContext(
+"2d"
+);
+
+const width =
+900;
+
+const height =
+180;
+
+canvas.width =
+width;
+
+canvas.height =
+height;
+
+/*
+Fondo transparente
+*/
+
+ctx.clearRect(
+0,
+0,
+width,
+height
+);
+
+/*
+Caja translúcida
+*/
+
+ctx.fillStyle =
+"rgba(5,15,35,.55)";
+
+roundRect(
+ctx,
+10,
+10,
+width - 20,
+height - 20,
+30
+);
+
+ctx.fill();
+
+/*
+Borde
+*/
+
+ctx.strokeStyle =
+"rgba(147,197,253,.45)";
+
+ctx.lineWidth =
+3;
+
+roundRect(
+ctx,
+10,
+10,
+width - 20,
+height - 20,
+30
+);
+
+ctx.stroke();
+
+/*
+Texto
+*/
+
+ctx.font =
+"bold 27px Arial";
+
+ctx.textAlign =
+"center";
+
+ctx.textBaseline =
+"middle";
+
+ctx.shadowColor =
+"#3b82f6";
+
+ctx.shadowBlur =
+12;
+
+ctx.fillStyle =
+"#dbeafe";
+
+/*
+Ajustar texto en varias líneas
+*/
+
+const words =
+text.split(" ");
+
+let lines = [];
+
+let current =
+"";
+
+const maxWidth =
+810;
+
+for (
+const word of words
+) {
+
+const test =
+current
+? current + " " + word
+: word;
+
+if (
+ctx.measureText(
+test
+).width >
+maxWidth
+) {
+
+lines.push(
+current
+);
+
+current =
+word;
+
+}
+
+else {
+
+current =
+test;
+
+}
+
+}
+
+if (current)
+lines.push(
+current
+);
+
+const lineHeight =
+35;
+
+const startY =
+height / 2 -
+(
+(lines.length - 1) *
+lineHeight
+) / 2;
+
+lines.forEach(
+(line,index) => {
+
+ctx.fillText(
+line,
+width / 2,
+startY +
+index *
+lineHeight
+);
+
+}
+);
+
+return canvas;
+
+}
+
+/* =====================================================
+RECTÁNGULO REDONDEADO
+===================================================== */
+
+function roundRect(
+ctx,
+x,
+y,
+width,
+height,
+radius
+) {
+
+ctx.beginPath();
+
+ctx.moveTo(
+x + radius,
+y
+);
+
+ctx.lineTo(
+x + width - radius,
+y
+);
+
+ctx.quadraticCurveTo(
+x + width,
+y,
+x + width,
+y + radius
+);
+
+ctx.lineTo(
+x + width,
+y + height - radius
+);
+
+ctx.quadraticCurveTo(
+x + width,
+y + height,
+x + width - radius,
+y + height
+);
+
+ctx.lineTo(
+x + radius,
+y + height
+);
+
+ctx.quadraticCurveTo(
+x,
+y + height,
+x,
+y + height - radius
+);
+
+ctx.lineTo(
+x,
+y + radius
+);
+
+ctx.quadraticCurveTo(
+x,
+y,
+x + radius,
+y
+);
+
+ctx.closePath();
+
+}
+
+/* =====================================================
+CREAR FRASES EN EL ESPACIO 3D
+===================================================== */
+
+const phraseObjects = [];
+
+phrases.forEach(
+(text,index) => {
+
+const textureCanvas =
+createTextTexture(
+text
+);
+
+const texture =
+new THREE.CanvasTexture(
+textureCanvas
+);
+
+texture.colorSpace =
+THREE.SRGBColorSpace;
+
+const material =
+new THREE.SpriteMaterial({
+
+map:
+texture,
+
+transparent:
+true,
+
+depthTest:
+true,
+
+depthWrite:
+false,
+
+opacity:
+.88
+
+});
+
+const sprite =
+new THREE.Sprite(
+material
+);
+
+/*
+========================================
+DISTRIBUCIÓN 3D
+========================================
+*/
+
+const angle =
+(
+index /
+phrases.length
+) *
+Math.PI *
+2;
+
+/*
+Distancia variable
+*/
+
+const radius =
+16 +
+Math.random() *
+17;
+
+/*
+Altura variable
+*/
+
+const vertical =
+(
+Math.random() -
+.5
+) * 24;
+
+/*
+PROFUNDIDAD VARIABLE
+*/
+
+const depth =
+(
+Math.random() -
+.5
+) * 32;
+
+sprite.position.set(
+
+Math.cos(angle) *
+radius,
+
+vertical,
+
+Math.sin(angle) *
+radius +
+depth
+
+);
+
+/*
+Tamaños diferentes
+*/
+
+const scale =
+.95 +
+Math.random() *
+.55;
+
+sprite.scale.set(
+8 * scale,
+1.6 * scale,
+1
+);
+
+/*
+Datos para animación
+*/
+
+sprite.userData = {
+
+baseX:
+sprite.position.x,
+
+baseY:
+sprite.position.y,
+
+baseZ:
+sprite.position.z,
+
+phase:
+Math.random() *
+Math.PI *
+2,
+
+speed:
+.3 +
+Math.random() *
+.5,
+
+amplitude:
+.25 +
+Math.random() *
+.8
+
+};
+
+world.add(
+sprite
+);
+
+phraseObjects.push(
+sprite
+);
+
+}
+);
+
+/* =====================================================
+EXPLOSIÓN
+===================================================== */
+
+const explosions = [];
+
+function createExplosion() {
+
+for (
+let i = 0;
+i < 1400;
+i++
+) {
+
+const geometry =
+new THREE.BufferGeometry();
+
+const p =
+new Float32Array([
+0,
+0,
+0
+ ]);
+
+geometry.setAttribute(
+
+"position",
+
+new THREE.BufferAttribute(
+p,
+3
+)
+
+);
+
+const material =
+new THREE.PointsMaterial({
+
+color:
+Math.random() >
+.5
+? 0x60a5fa
+: 0xdbeafe,
+
+size:
+Math.random() *
+.12 +
+.025,
+
+transparent:
+true,
+
+opacity:
+1,
+
+blending:
+THREE.AdditiveBlending,
+
+depthWrite:
+false
+
+});
+
+const particle =
+new THREE.Points(
+geometry,
+material
+);
+
+heartGroup.add(
+particle
+);
+
+const direction =
+new THREE.Vector3(
+
+Math.random() -
+.5,
+
+Math.random() -
+.5,
+
+Math.random() -
+.5
+
+).normalize();
+
+const speed =
+Math.random() *
+.32 +
+.08;
+
+particle.userData = {
+
+velocity:
+direction
+.multiplyScalar(
+speed
+),
+
+life:
+0,
+
+maxLife:
+80 +
+Math.random() *
+100
+
+};
+
+explosions.push(
+particle
+);
+
+}
+
+}
+
+/* =====================================================
+INTERACCIÓN
+===================================================== */
+
+let dragging =
+false;
+
+let previousX =
+0;
+
+let previousY =
+0;
+
+let targetRotationX =
+0;
+
+let targetRotationY =
+0;
+
+let rotationX =
+0;
+
+let rotationY =
+0;
+
+/* =========================================
+TOCAR / ARRASTRAR
+========================================= */
+
+renderer.domElement.addEventListener(
+"pointerdown",
+event => {
+
+dragging =
+true;
+
+previousX =
+event.clientX;
+
+previousY =
+event.clientY;
+
+renderer.domElement.setPointerCapture(
+event.pointerId
+);
+
+}
+);
+
+renderer.domElement.addEventListener(
+"pointermove",
+event => {
+
+if (!dragging)
+return;
+
+const dx =
+event.clientX -
+previousX;
+
+const dy =
+event.clientY -
+previousY;
+
+targetRotationY +=
+dx * .009;
+
+targetRotationX +=
+dy * .009;
+
+/*
+Evita que se voltee
+demasiado verticalmente
+*/
+
+targetRotationX =
+THREE.MathUtils.clamp(
+targetRotationX,
+-Math.PI / 2,
+Math.PI / 2
+);
+
+previousX =
+event.clientX;
+
+previousY =
+event.clientY;
+
+}
+);
+
+renderer.domElement.addEventListener(
+"pointerup",
+event => {
+
+dragging =
+false;
+
+try {
+
+renderer.domElement
+.releasePointerCapture(
+event.pointerId
+);
+
+} catch {}
+
+}
+);
+
+/* =====================================================
+ZOOM CON RUEDA
+===================================================== */
+
+renderer.domElement.addEventListener(
+"wheel",
+event => {
+
+camera.position.z +=
+event.deltaY *
+.025;
+
+camera.position.z =
+THREE.MathUtils.clamp(
+
+camera.position.z,
+
+18,
+
+65
+
+);
+
+},
+{
+passive: true
+}
+);
+
+/* =====================================================
+ZOOM CON PINCH
+===================================================== */
+
+let lastTouchDistance =
+null;
+
+renderer.domElement.addEventListener(
+"touchmove",
+event => {
+
+if (
+event.touches.length !== 2
+)
+return;
+
+const a =
+event.touches[0];
+
+const b =
+event.touches[1];
+
+const dx =
+a.clientX -
+b.clientX;
+
+const dy =
+a.clientY -
+b.clientY;
+
+const distance =
+Math.sqrt(
+dx * dx +
+dy * dy
+);
+
+if (
+lastTouchDistance !==
+null
+) {
+
+const difference =
+distance -
+lastTouchDistance;
+
+camera.position.z -=
+difference *
+.025;
+
+}
+
+lastTouchDistance =
+distance;
+
+camera.position.z =
+THREE.MathUtils.clamp(
+
+camera.position.z,
+
+18,
+
+65
+
+);
+
+},
+{
+passive: true
+}
+);
+
+renderer.domElement.addEventListener(
+"touchend",
+() => {
+
+lastTouchDistance =
+null;
+
+}
+);
+
+/* =====================================================
+ANIMACIÓN
+===================================================== */
+
+const clock =
+new THREE.Clock();
+
+function animate() {
+
+requestAnimationFrame(
+animate
+);
+
+const time =
+clock.getElapsedTime();
+
+/*
+========================================
+ROTACIÓN SUAVE
+========================================
+*/
+
+rotationX +=
+(
+targetRotationX -
+rotationX
+) * .08;
+
+rotationY +=
+(
+targetRotationY -
+rotationY
+) * .08;
+
+/*
+Rotación automática
+*/
+
+if (!dragging) {
+
+targetRotationY +=
+.0018;
+
+}
+
+world.rotation.x =
+rotationX;
+
+world.rotation.y =
+rotationY;
+
+/*
+========================================
+LATIDO
+========================================
+*/
+
+const heartbeat =
+1 +
+
+Math.sin(
+time * 4
+) *
+.035 +
+
+Math.sin(
+time * 8
+) *
+.012;
+
+heartGroup.scale.set(
+heartbeat,
+heartbeat,
+heartbeat
+);
+
+/*
+========================================
+MOVIMIENTO DE PARTÍCULAS
+========================================
+*/
+
+const pos =
+heartGeometry.attributes
+.position.array;
+
+for (
+let i = 0;
+i < PARTICLE_COUNT;
+i++
+) {
+
+const i3 =
+i * 3;
+
+const ox =
+originalPositions[i3];
+
+const oy =
+originalPositions[i3 + 1];
+
+const oz =
+originalPositions[i3 + 2];
+
+/*
+Vibración muy pequeña
+*/
+
+pos[i3] =
+ox +
+Math.sin(
+time * 2 +
+i
+) *
+.025;
+
+pos[i3 + 1] =
+oy +
+Math.cos(
+time * 2.3 +
+i
+) *
+.025;
+
+pos[i3 + 2] =
+oz +
+Math.sin(
+time * 1.7 +
+i
+) *
+.035;
+
+}
+
+heartGeometry.attributes
+.position
+.needsUpdate =
+true;
+
+/*
+========================================
+FRASES 3D
+========================================
+*/
+
+phraseObjects.forEach(
+sprite => {
+
+const data =
+sprite.userData;
+
+sprite.position.y =
+data.baseY +
+
+Math.sin(
+time *
+data.speed +
+data.phase
+) *
+data.amplitude;
+
+sprite.position.x =
+data.baseX +
+
+Math.cos(
+time *
+.3 +
+data.phase
+) *
+.12;
+
+sprite.position.z =
+data.baseZ +
+
+Math.sin(
+time *
+.4 +
+data.phase
+) *
+.15;
+
+/*
+Brillo suave
+*/
+
+sprite.material.opacity =
+.72 +
+
+Math.sin(
+time *
+1.2 +
+data.phase
+) *
+.12;
+
+}
+);
+
+/*
+========================================
+PARTÍCULAS DEL ESPACIO
+========================================
+*/
+
+ambientParticles.rotation.y =
+time * .008;
+
+ambientParticles.rotation.x =
+Math.sin(
+time * .1
+) * .04;
+
+/*
+========================================
+EXPLOSIONES
+========================================
+*/
+
+for (
+let i =
+explosions.length - 1;
+
+i >= 0;
+
+i--
+) {
+
+const particle =
+explosions[i];
+
+const data =
+particle.userData;
+
+particle.position.add(
+data.velocity
+);
+
+data.velocity.multiplyScalar(
+.985
+);
+
+data.velocity.y -=
+.0008;
+
+data.life++;
+
+particle.material.opacity =
+1 -
+data.life /
+data.maxLife;
+
+if (
+data.life >=
+data.maxLife
+) {
+
+heartGroup.remove(
+particle
+);
+
+particle.geometry.dispose();
+
+particle.material.dispose();
+
+explosions.splice(
+i,
+1
+);
+
+}
+
+}
+
+/*
+========================================
+RENDER
+========================================
+*/
+
+renderer.render(
+scene,
+camera
+);
+
+}
+
+animate();
+
+/* =====================================================
+BOTÓN
+===================================================== */
+
+const button =
+document.getElementById(
+"startButton"
+);
+
+button.addEventListener(
+"click",
+() => {
+
+createExplosion();
+
+button.textContent =
+"❤️ TE QUIERO ❤️";
+
+setTimeout(
+() => {
+
+createExplosion();
+
+},
+350
+);
+
+setTimeout(
+() => {
+
+createExplosion();
+
+},
+700
+);
+
+setTimeout(
+() => {
+
+button.textContent =
+"✨ Ver sorpresa";
+
+},
+3000
+);
+
+}
+);
+
+/* =====================================================
+RESIZE
+===================================================== */
+
+window.addEventListener(
+"resize",
+() => {
+
+camera.aspect =
+window.innerWidth /
+window.innerHeight;
+
+camera.updateProjectionMatrix();
+
+renderer.setSize(
+window.innerWidth,
+window.innerHeight
+);
+
+}
+);
+
+</script>
+
+</body>
+</html>
